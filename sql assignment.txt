@@ -1,6 +1,6 @@
 create table SalesPeople(
-sales_num int,
-primary key(sales_num),
+Snum int,
+primary key(Snum),
 Sname varchar(50) unique,
 City varchar(50),
 Comm int
@@ -13,13 +13,13 @@ insert into SalesPeople values(1007 ,'Rifkin' ,'Barcelona' ,15);
 insert into SalesPeople values(1003 ,'Axelrod' ,'Newyork' ,10);
 
 create table Customers(
-cust_num int,
-primary key(cust_num),
+Cnum int,
+primary key(Cnum),
 Cname varchar(50),
 City varchar(50) not null,
-sales_num int,
-foreign key (sales_num)
-references SalesPeople(sales_num)
+Snum int,
+foreign key (Snum)
+references SalesPeople(Snum)
 );
 
 insert into Customers values(2001 , 'Hoffman', 'London' ,1001);
@@ -31,16 +31,16 @@ insert into Customers values(2008 ,'Cisneros' ,'Sanjose' ,1007);
 insert into Customers values(2007, 'Pereira' ,'Rome' ,1004);
 
 create table Orders(
-order_num int,
-primary key(order_num),
+Onum int,
+primary key(Onum),
 Amt int,
 Odate varchar(50) not null,
-cust_num int,
-foreign key (cust_num)
-references Customers(cust_num),
-sales_num int,
-foreign key (sales_num)
-references SalesPeople(sales_num)
+Cnum int,
+foreign key (Cnum)
+references Customers(Cnum),
+Snum int,
+foreign key (Snum)
+references SalesPeople(Snum)
 );
 
 insert into Orders values(3001 ,18.69 ,'3-10-1990' ,2008 ,1007);
@@ -58,13 +58,12 @@ select * from orders;
 select * from Customers;
 select * from SalesPeople;
 
-
 select count(Sname) as count from SalesPeople where Sname like 'a%' or Sname like 'A%';
 
-select * from SalesPeople where sales_num in (select sales_num  from orders group by sales_num having sum(Amt) > 2000);
+select * from SalesPeople where Snum in (select Snum  from orders group by Snum having sum(Amt) > 2000);
 
 select count(Sname) as count1 from SalesPeople where City='Newyork';
 
 select count(Sname) as count2  from SalesPeople where City='London' or City='Paris';
 
-select sn.Sname,sn.City, count( os.order_num) as Total_Orders,os.Odate from SalesPeople sn join orders os on sn.sales_num=os.sales_num group by sn.sales_num;
+select sn.Sname,sn.City, count( os.Onum) as Total_Orders,os.Odate from SalesPeople sn join orders os on sn.Snum=os.Snum group by sn.Snum;
